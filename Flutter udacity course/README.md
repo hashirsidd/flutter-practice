@@ -1,4 +1,5 @@
-# hello_rectangle
+# Flutter Udacity
+
 
 A new Flutter application.
 
