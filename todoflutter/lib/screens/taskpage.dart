@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:todoflutter/database_helper.dart';
+import 'package:todoflutter/models/task.dart';
 import 'package:todoflutter/screens/widget.dart';
 
 class Taskpage extends StatefulWidget {
@@ -17,86 +20,150 @@ class _TaskpageState extends State<Taskpage> {
           child: Stack(
             children: [
               Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: Image(
-                            height: 30.0,
-                            width: 30.0,
-                            image:
-                                AssetImage("asset/images/back_arrow_icon.png")),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Image(
+                              height: 30.0,
+                              width: 30.0,
+                              image: AssetImage(
+                                  "asset/images/back_arrow_icon.png")),
+                        ),
                       ),
+                      Expanded(
+                          child: TextField(
+                        onSubmitted: (value) async{
+                          if (value != "") {
+                            DatabaseHelper _dbhelper = DatabaseHelper();
+                            Task _newTask = Task( title: value, description: "") ;
+                            await _dbhelper.insertTask(_newTask)     ;
+                            print('new tassk has been created');
+                          }
+                        },
+                        decoration: InputDecoration(
+                            hintText: 'Enter Task Title',
+                            border: InputBorder.none),
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      )),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 12.0,
                     ),
-                    Expanded(
-                        child: TextField(
+                    child: TextField(
                       decoration: InputDecoration(
-                          hintText: 'Enter Task Title',
-                          border: InputBorder.none),
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        hintText: 'Description for the tasks',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
                       ),
-                    )),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0,),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Description for the tasks',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView(
-                    children:[
-                      TodoWidget(text: "Complete todo app home page",isdone: true,) ,
-                  TodoWidget(text: "Complete todo app home page Complete todo app home page Complete todo app home page lorem Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-                  TodoWidget(text: "Complete todo app home page",isdone: true,),
-
-
-                  TodoWidget(),
-                  TodoWidget(),
-                  TodoWidget(),
-                  
-              ],
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(
+                          text: "Complete todo app home page",
+                          isdone: true,
+                        ),
+                        TodoWidget(),
+                        TodoWidget(),
+                        TodoWidget(),
+                      ],
+                    ),
                   ),
-                ),
-      ],
-            ),
+                ],
+              ),
               Positioned(
                 bottom: 0.0,
                 right: 0.0,
                 child: GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> Taskpage()))    ;
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Taskpage()));
                   },
                   child: Container(
                     // padding: EdgeInsets.all(12.0),
@@ -125,7 +192,5 @@ class _TaskpageState extends State<Taskpage> {
         ),
       ),
     );
-  }  
+  }
 }
-
-

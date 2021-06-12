@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todoflutter/database_helper.dart';
 import 'package:todoflutter/screens/taskpage.dart';
 import 'package:todoflutter/screens/widget.dart';
 
@@ -9,6 +10,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  DatabaseHelper _dbHelper = DatabaseHelper();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,22 +47,25 @@ class _HomepageState extends State<Homepage> {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: ListView(
-                        children: [
-                          TaskCardWidget(
-                            title: 'Hello',
-                            desc:
-                                "Hello! Welcome to ToDo app, This app is build in Flutter. This is a default task, you can edit or delete it to start using the app",
-                          ),
-                          TaskCardWidget(),
-                          TaskCardWidget(title: 'hi!'),
-                          TaskCardWidget(),
-                          TaskCardWidget(title: 'hi!'),
-                          TaskCardWidget(),
-                          TaskCardWidget(title: 'hi!'),
-                          TaskCardWidget(),
-                          TaskCardWidget(title: 'hi!'),
-                        ],
+                      child: FutureBuilder (
+
+                        future: _dbHelper.getTasks(),
+                        initialData: [],
+                        builder: (context,snapshot){
+
+                            return  snapshot.hasData
+                                ?ListView.builder(
+
+                              itemCount: snapshot.data.length  ,
+                              itemBuilder: (context, index) {
+                                return TaskCardWidget (
+                                  title: snapshot.data[index].title,
+                                  desc: snapshot.data[index].description,
+                                );
+                              },
+                            );
+                             }   ,
+
                       ),
                     ),
                   ),
