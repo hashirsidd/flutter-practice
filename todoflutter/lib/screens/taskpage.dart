@@ -6,12 +6,26 @@ import 'package:todoflutter/models/task.dart';
 import 'package:todoflutter/screens/widget.dart';
 
 class Taskpage extends StatefulWidget {
+  // final int id;
+  final Task? task;
+  Taskpage({required this.task});
   @override
   _TaskpageState createState() => _TaskpageState();
 }
 
 class _TaskpageState extends State<Taskpage> {
+  String _taskTitle = "";
   @override
+  void initState() {
+    if(widget.task != null){
+      _taskTitle = widget.task!.title;
+      print(widget.task!.id);
+    }
+
+
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -39,14 +53,20 @@ class _TaskpageState extends State<Taskpage> {
                       ),
                       Expanded(
                           child: TextField(
-                        onSubmitted: (value) async{
+                        onSubmitted: (value) async {
                           if (value != "") {
-                            DatabaseHelper _dbhelper = DatabaseHelper();
-                            Task _newTask = Task( title: value, description: "") ;
-                            await _dbhelper.insertTask(_newTask)     ;
                             // print('new tasskhas been created');
                           }
+                          if (widget.task == null) {
+                            DatabaseHelper _dbhelper = DatabaseHelper();
+                            Task _newTask = Task(title: value, description: "");
+                            await _dbhelper.insertTask(_newTask);
+                            print("create new task");
+                          } else {
+                            print("Update task");
+                          }
                         },
+                        controller: TextEditingController()..text = _taskTitle,
                         decoration: InputDecoration(
                             hintText: 'Enter Task Title',
                             border: InputBorder.none),
@@ -77,78 +97,6 @@ class _TaskpageState extends State<Taskpage> {
                           text: "Complete todo app home page",
                           isdone: true,
                         ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
-                        ),
                         TodoWidget(),
                         TodoWidget(),
                         TodoWidget(),
@@ -160,27 +108,28 @@ class _TaskpageState extends State<Taskpage> {
               Positioned(
                 bottom: 0.0,
                 right: 0.0,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Taskpage()));
-                  },
-                  child: Container(
-                    // padding: EdgeInsets.all(12.0),
-                    height: 60.0,
-                    width: 60.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadiusDirectional.circular(30.0),
-                      color: Colors.red,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 2,
-                          blurRadius: 2,
-                          offset: Offset(0, 0), // changes position of shadow
-                        ),
-                      ],
-                    ),
+                child: Container(
+                  // padding: EdgeInsets.all(12.0),
+                  height: 60.0,
+                  width: 60.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadiusDirectional.circular(30.0),
+                    color: Colors.red,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: Offset(0, 0), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      DatabaseHelper _dbhelper = DatabaseHelper();
+                      await _dbhelper.deleteTasks(widget.task!.id);
+                      Navigator.pop(context);
+                    },
                     child: Image(
                       image: AssetImage('asset/images/delete_icon.png'),
                     ),

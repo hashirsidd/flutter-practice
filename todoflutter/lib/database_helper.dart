@@ -1,5 +1,5 @@
 import 'dart:ffi';
-
+import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todoflutter/models/task.dart';
@@ -36,5 +36,22 @@ class DatabaseHelper {
           title: taskMap[index]['title'],
           description: taskMap[index]['description']);
     });
+  }
+  Future<void> deleteTasks(int? id) async {
+    // Get a reference to the database.
+   if(id != null){
+     Database _db = await database();
+
+     // Remove the Dog from the database.
+     await _db.delete(
+
+       'tasks',
+       // Use a `where` clause to delete a specific dog.
+       where: 'id = ?',
+       // Pass the Dog's id as a whereArg to prevent SQL injection.
+       whereArgs: [id],
+     );
+   }
+    // print(id);
   }
 }
