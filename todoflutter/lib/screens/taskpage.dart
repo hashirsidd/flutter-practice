@@ -17,11 +17,10 @@ class _TaskpageState extends State<Taskpage> {
   String _taskTitle = "";
   @override
   void initState() {
-    if(widget.task != null){
+    if (widget.task != null) {
       _taskTitle = widget.task!.title;
       print(widget.task!.id);
     }
-
 
     super.initState();
   }
@@ -56,14 +55,20 @@ class _TaskpageState extends State<Taskpage> {
                         onSubmitted: (value) async {
                           if (value != "") {
                             // print('new tasskhas been created');
-                          }
-                          if (widget.task == null) {
-                            DatabaseHelper _dbhelper = DatabaseHelper();
-                            Task _newTask = Task(title: value, description: "");
-                            await _dbhelper.insertTask(_newTask);
-                            print("create new task");
-                          } else {
-                            print("Update task");
+                            if (widget.task == null) {
+                              DatabaseHelper _dbhelper = DatabaseHelper();
+                              Task _newTask =
+                                  Task(title: value, description: "");
+                              await _dbhelper.insertTask(_newTask);
+                              print("create new task");
+                            } else {
+                              DatabaseHelper _dbhelper = DatabaseHelper();
+                              Task _updateTask = Task(
+                                  id: widget.task!.id,
+                                  title: value,
+                                  description: "");
+                              await _dbhelper.updateTask(_updateTask);
+                            }
                           }
                         },
                         controller: TextEditingController()..text = _taskTitle,
@@ -93,13 +98,46 @@ class _TaskpageState extends State<Taskpage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        TodoWidget(
-                          text: "Complete todo app home page",
-                          isdone: true,
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  // padding: EdgeInsets.all(5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    color: Colors.transparent,
+                                    border: Border.all(
+                                      color: Colors.blue,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  width: 25.0,
+                                  height: 25.0,
+                                  child: Image(
+                                    height: 20.0,
+                                    width: 20.0,
+                                    image: AssetImage(
+                                      'asset/images/check_icon.png',
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(right: 8.0),
+                                ),
+                                Expanded(
+                                    child: TextField(
+                                      onSubmitted: (value){
+
+                                      },
+                                  decoration: InputDecoration(
+                                    hintText: "Enter Todo item..",
+                                    border: InputBorder.none,
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ],
                         ),
-                        TodoWidget(),
-                        TodoWidget(),
-                        TodoWidget(),
+                      
                       ],
                     ),
                   ),

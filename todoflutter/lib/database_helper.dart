@@ -8,11 +8,11 @@ class DatabaseHelper {
   Future<Database> database() async {
     return openDatabase(
       join(await getDatabasesPath(), 'todo.db'),
-      onCreate: (db, version) {
-        // Run the CREATE TABLE statement on the database.
-        return db.execute(
-          'CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description INTEGER)',
-        );
+      onCreate: (db, version) async {
+        await db.execute("CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
+        await db.execute("CREATE TABLE todo(id INTEGER PRIMARY KEY, taskId INTEGER, title TEXT, isDone INTEGER)");
+
+        // return db;
       },
       version: 1,
     );
@@ -37,21 +37,36 @@ class DatabaseHelper {
           description: taskMap[index]['description']);
     });
   }
+
   Future<void> deleteTasks(int? id) async {
     // Get a reference to the database.
-   if(id != null){
-     Database _db = await database();
+    if (id != null) {
+      Database _db = await database();
 
-     // Remove the Dog from the database.
-     await _db.delete(
-
-       'tasks',
-       // Use a `where` clause to delete a specific dog.
-       where: 'id = ?',
-       // Pass the Dog's id as a whereArg to prevent SQL injection.
-       whereArgs: [id],
-     );
-   }
+      // Remove the Dog from the database.
+      await _db.delete(
+        'tasks',
+        // Use a `where` clause to delete a specific dog.
+        where: 'id = ?',
+        // Pass the Dog's id as a whereArg to prevent SQL injection.
+        whereArgs: [id],
+      );
+    }
     // print(id);
+  }
+
+  Future<void> updateTask(Task task) async {
+    // Get a reference to the database.
+    var id = task.id;
+    if (id != null) {
+      Database _db = await database();
+      await _db.update(
+        'tasks',
+        task.toMap(),
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }
+    // print("update id : $id") ;
   }
 }
