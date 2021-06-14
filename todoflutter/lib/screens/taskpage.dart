@@ -31,8 +31,8 @@ class _TaskpageState extends State<Taskpage> {
       _contentVisible = true;
       _taskTitle = widget.task!.title;
       _taskId = widget.task!.id!;
-      if(widget.task!.description != ""){
-                              _taskDesc = widget.task!.description;
+      if (widget.task!.description != "") {
+        _taskDesc = widget.task!.description;
       }
       print(widget.task!.id);
     }
@@ -87,10 +87,13 @@ class _TaskpageState extends State<Taskpage> {
                             if (widget.task == null) {
                               Task _newTask =
                                   Task(title: value, description: "");
-                              await _dbhelper.insertTask(_newTask);
+                              int id = await _dbhelper.insertTask(_newTask);
                               print("create new task");
                               setState(() {
                                 _taskTitle = value;
+                                _contentVisible = true;
+                                _taskId = id;
+
                               });
                             } else {
                               Task _updateTask = Task(
@@ -124,20 +127,18 @@ class _TaskpageState extends State<Taskpage> {
                         bottom: 12.0,
                       ),
                       child: TextField(
-
                         onSubmitted: (value) async {
                           if (value != "") {
                             if (widget.task == null) {
-                              Task _newTask =
-                              Task(id:_taskId,title: _taskTitle, description: value);
+                              Task _newTask = Task(
+                                  id: _taskId,
+                                  title: _taskTitle,
+                                  description: value);
                               await _dbhelper.insertDesc(_newTask);
                               // print("create new task");
                               print('description added');
-                              setState(() {
-                                // _taskTitle = _taskTitle;
-                                _taskDesc = value;
 
-                              });
+
                             } else {
                               Task _updateTask = Task(
                                   id: widget.task!.id,
@@ -145,12 +146,14 @@ class _TaskpageState extends State<Taskpage> {
                                   description: value);
                               await _dbhelper.updateTask(_updateTask);
                             }
-                          }
+                          }  setState(() {
+                            // _taskTitle = _taskTitle;
+                            _taskDesc = value;
+                          });
                           _todoFocus.requestFocus();
-
-                        },                         controller: TextEditingController()..text = _taskDesc,
-
+                        },
                         focusNode: _descriptionFocus,
+                        controller: TextEditingController()..text = _taskDesc,
                         decoration: InputDecoration(
 
                           hintText: 'Description for the tasks',
@@ -169,18 +172,24 @@ class _TaskpageState extends State<Taskpage> {
                         initialData: [],
                         future: _dbhelper.getTodo(_taskId),
                         builder: (context, AsyncSnapshot snapshot) {
-                          print('taskid ${_taskId}');
+                          print('taskid of todo ${_taskId}');
                           return ClipRRect(
                             child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       if (snapshot.data![index].isDone == 0) {
-                                        print("isdone false");
+                                        print("todo id ${snapshot.data[index].id}");
+
+                                        await _dbhelper.isDoneTodo(snapshot.data[index].id , _taskId,1);
                                       } else {
-                                        print("isdone true");
-                                      }
+                                        // print("isdone true");
+                                        print("todo id ${snapshot.data[index].id}");
+                                        await _dbhelper.isDoneTodo(snapshot.data[index].id , _taskId,0);
+
+
+                                      }       setState(() {});
                                     },
                                     child: TodoWidget(
                                       title: snapshot.data[index].title,
@@ -227,10 +236,13 @@ class _TaskpageState extends State<Taskpage> {
                               onSubmitted: (value) async {
                                 if (value != "") {
                                   print('new todo been created');
-                                  if (widget.task != null) {
+                                  if (_taskTitle != "") {
+                                    print("Taskid inside todo $_taskId");
                                     DatabaseHelper _dbhelper = DatabaseHelper();
                                     Todo _newTodo = Todo(
-                                        taskId: _taskId, title: value, isDone: 0);
+                                        taskId: _taskId,
+                                        title: value,
+                                        isDone: 0);
                                     await _dbhelper.insertTodo(_newTodo);
                                     setState(() {});
                                     print("create new todo");
