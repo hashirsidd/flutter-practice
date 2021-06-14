@@ -23,7 +23,7 @@ class _HomepageState extends State<Homepage> {
           child: Stack(
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     margin: EdgeInsets.only(bottom: 25.0),
@@ -34,11 +34,12 @@ class _HomepageState extends State<Homepage> {
                           width: 60.0,
                           height: 60.0,
                         ),
+
                         Text(
-                          "TODO APP",
+                          "My TODO",
                           style: TextStyle(
                             fontSize: 45.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xff68B7F7),
                           ),
                         )
@@ -69,9 +70,10 @@ class _HomepageState extends State<Homepage> {
                                   });
                                 },
                                 child: TaskCardWidget(
-                                  title: snapshot.data[index].title,
-                                  desc: snapshot.data[index].description,
-                                ),
+                                    title:
+                                        '${snapshot.data[index].title[0].toUpperCase()}${snapshot.data[index].title.substring(1)}',
+                                    desc:
+                                        '${snapshot.data[index].description[0].toUpperCase()}${snapshot.data[index].description.substring(1)}'),
                               );
                             },
                           );

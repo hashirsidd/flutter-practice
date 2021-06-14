@@ -29,10 +29,12 @@ class _TaskpageState extends State<Taskpage> {
   void initState() {
     if (widget.task != null) {
       _contentVisible = true;
-      _taskTitle = widget.task!.title;
+      _taskTitle =
+          '${widget.task!.title[0].toUpperCase()}${widget.task!.title.substring(1)}';
       _taskId = widget.task!.id!;
       if (widget.task!.description != "") {
-        _taskDesc = widget.task!.description;
+        _taskDesc =
+            '${widget.task!.description[0].toUpperCase()}${widget.task!.description.substring(1)}';
       }
       print(widget.task!.id);
     }
@@ -80,6 +82,8 @@ class _TaskpageState extends State<Taskpage> {
                       ),
                       Expanded(
                           child: TextField(
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.sentences,
                         focusNode: _titleFocus,
                         onSubmitted: (value) async {
                           if (value != "") {
@@ -93,7 +97,6 @@ class _TaskpageState extends State<Taskpage> {
                                 _taskTitle = value;
                                 _contentVisible = true;
                                 _taskId = id;
-
                               });
                             } else {
                               Task _updateTask = Task(
@@ -127,6 +130,8 @@ class _TaskpageState extends State<Taskpage> {
                         bottom: 12.0,
                       ),
                       child: TextField(
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.sentences,
                         onSubmitted: (value) async {
                           if (value != "") {
                             if (widget.task == null) {
@@ -137,8 +142,6 @@ class _TaskpageState extends State<Taskpage> {
                               await _dbhelper.insertDesc(_newTask);
                               // print("create new task");
                               print('description added');
-
-
                             } else {
                               Task _updateTask = Task(
                                   id: widget.task!.id,
@@ -146,7 +149,8 @@ class _TaskpageState extends State<Taskpage> {
                                   description: value);
                               await _dbhelper.updateTask(_updateTask);
                             }
-                          }  setState(() {
+                          }
+                          setState(() {
                             // _taskTitle = _taskTitle;
                             _taskDesc = value;
                           });
@@ -155,10 +159,12 @@ class _TaskpageState extends State<Taskpage> {
                         focusNode: _descriptionFocus,
                         controller: TextEditingController()..text = _taskDesc,
                         decoration: InputDecoration(
-
                           hintText: 'Description for the tasks',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+                        ),
+                        style: TextStyle(
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -180,20 +186,30 @@ class _TaskpageState extends State<Taskpage> {
                                   return GestureDetector(
                                     onTap: () async {
                                       if (snapshot.data![index].isDone == 0) {
-                                        print("todo id ${snapshot.data[index].id}");
+                                        print(
+                                            "todo id ${snapshot.data[index].id}");
 
-                                        await _dbhelper.isDoneTodo(snapshot.data[index].id , _taskId,1);
+                                        await _dbhelper.isDoneTodo(
+                                            snapshot.data[index].id,
+                                            _taskId,
+                                            1);
                                       } else {
                                         // print("isdone true");
-                                        print("todo id ${snapshot.data[index].id}");
-                                        await _dbhelper.isDoneTodo(snapshot.data[index].id , _taskId,0);
-
-
-                                      }       setState(() {});
+                                        print(
+                                            "todo id ${snapshot.data[index].id}");
+                                        await _dbhelper.isDoneTodo(
+                                            snapshot.data[index].id,
+                                            _taskId,
+                                            0);
+                                      }
+                                      setState(() {});
                                     },
                                     child: TodoWidget(
                                       title: snapshot.data[index].title,
                                       isDone: snapshot.data[index].isDone,
+                                      taskId: snapshot.data[index].taskId,
+                                      todoId: snapshot.data[index].id,
+
                                     ),
                                   );
                                 }),
@@ -232,6 +248,8 @@ class _TaskpageState extends State<Taskpage> {
                             ),
                             Expanded(
                                 child: TextField(
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.sentences,
                               focusNode: _todoFocus,
                               onSubmitted: (value) async {
                                 if (value != "") {

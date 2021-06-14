@@ -130,19 +130,19 @@ class DatabaseHelper {
           isDone: todoMap[index]['isDone']);
     });
   }
-  // Future<void> updateTask(Task task) async {
-  //   // Get a reference to the database.
-  //   var id = task.id;
-  //   if (id != null) {
-  //     Database _db = await database();
-  //     await _db.update(
-  //       'tasks',
-  //       task.toMap(),
-  //       where: 'id = ?',
-  //       whereArgs: [id],
-  //     );
-  //   }
-  //   // print("update id : $id") ;
-  // }
+  Future<void> deleteTodo(int id, int taskId,) async {
+    // Get a reference to the database.
+    Database _db = await database();
+
+    // Remove the Dog from the database.
+    await _db.delete(
+      'todo',
+      // Use a `where` clause to delete a specific dog.
+      where: 'id = ? and taskId = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [id,taskId],
+    );                                 
+    // print(id);
+  }
 }
 
