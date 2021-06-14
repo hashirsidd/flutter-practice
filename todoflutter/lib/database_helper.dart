@@ -1,8 +1,11 @@
 import 'dart:ffi';
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todoflutter/models/task.dart';
+
+import 'models/todo.dart';
 
 class DatabaseHelper {
   Future<Database> database() async {
@@ -69,4 +72,40 @@ class DatabaseHelper {
     }
     // print("update id : $id") ;
   }
+
+  Future<void> insertTodo(Todo todo) async {
+    Database _db = await database();
+    await _db.insert(
+      'todo',
+      todo.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Todo>> getTodo(int taskID) async {
+    Database _db = await database();
+    List<Map<String, dynamic>> todoMap = await _db.rawQuery('SELECT * FROM todo where taskId = $taskID');
+    return List.generate(todoMap.length, (index) {
+      return Todo(
+          id: todoMap[index]['id'],
+          taskId: todoMap[index]['taskId'],
+          title: todoMap[index]['title'],
+          isDone: todoMap[index]['isDone']);
+    });
+  }
+  // Future<void> updateTask(Task task) async {
+  //   // Get a reference to the database.
+  //   var id = task.id;
+  //   if (id != null) {
+  //     Database _db = await database();
+  //     await _db.update(
+  //       'tasks',
+  //       task.toMap(),
+  //       where: 'id = ?',
+  //       whereArgs: [id],
+  //     );
+  //   }
+  //   // print("update id : $id") ;
+  // }
 }
+

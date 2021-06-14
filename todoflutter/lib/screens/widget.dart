@@ -51,12 +51,20 @@ class TaskCardWidget extends StatelessWidget {
 }
 
 class TodoWidget extends StatelessWidget {
-  final String text;
-  final bool isdone;
-  TodoWidget({this.text = "(Unnamed Todo)", this.isdone = false});
+  final String title;
+  final int isDone;
+
+  TodoWidget({this.title = "(Unnamed Todo)", this.isDone = 0});
+
 
   @override
   Widget build(BuildContext context) {
+    bool isdone = false;
+    if(isDone==0){
+           isdone = false;
+    }else{
+      isdone = true;
+    }
     return Container(
      
       child: Padding(
@@ -87,7 +95,7 @@ class TodoWidget extends StatelessWidget {
               margin: EdgeInsets.only(right: 8.0),
             ),
             Text(
-              text,
+              title,
               style: TextStyle(
                 fontWeight: isdone? FontWeight.bold : FontWeight.w500,
                 color: isdone? Colors.black87 : Colors.black54,
