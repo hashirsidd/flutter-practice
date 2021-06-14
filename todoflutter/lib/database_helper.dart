@@ -29,6 +29,19 @@ class DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+  Future<void> insertDesc(Task task) async {
+    Database _db = await database();
+    var id = task.id;
+    if (id != null) {
+      Database _db = await database();
+      await _db.update(
+        'tasks',
+        task.toMap(),
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }
+  }
 
   Future<List<Task>> getTasks() async {
     Database _db = await database();
@@ -51,6 +64,13 @@ class DatabaseHelper {
         'tasks',
         // Use a `where` clause to delete a specific dog.
         where: 'id = ?',
+        // Pass the Dog's id as a whereArg to prevent SQL injection.
+        whereArgs: [id],
+      );
+      await _db.delete(
+        'todo',
+        // Use a `where` clause to delete a specific dog.
+        where: 'taskId = ?',
         // Pass the Dog's id as a whereArg to prevent SQL injection.
         whereArgs: [id],
       );
