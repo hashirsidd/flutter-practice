@@ -34,7 +34,6 @@ class _HomepageState extends State<Homepage> {
                           width: 60.0,
                           height: 60.0,
                         ),
-
                         Text(
                           "My TODO",
                           style: TextStyle(
@@ -70,10 +69,8 @@ class _HomepageState extends State<Homepage> {
                                   });
                                 },
                                 child: TaskCardWidget(
-                                    title:
-                                        '${snapshot.data[index].title[0].toUpperCase()}${snapshot.data[index].title.substring(1)}',
-                                    desc:
-                                        '${snapshot.data[index].description[0].toUpperCase()}${snapshot.data[index].description.substring(1)}'),
+                                    title: snapshot.data[index].title,
+                                    desc: snapshot.data[index].description),
                               );
                             },
                           );

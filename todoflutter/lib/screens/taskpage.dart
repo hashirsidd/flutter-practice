@@ -25,6 +25,10 @@ class _TaskpageState extends State<Taskpage> {
   late FocusNode _descriptionFocus;
   late FocusNode _todoFocus;
   bool _contentVisible = false;
+  void updateDeleteTodoItem() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     if (widget.task != null) {
@@ -88,22 +92,29 @@ class _TaskpageState extends State<Taskpage> {
                         onSubmitted: (value) async {
                           if (value != "") {
                             // print('new tasskhas been created');
-                            if (widget.task == null) {
+                            if (widget.task == null && _taskId != widget.task!.id) {
                               Task _newTask =
                                   Task(title: value, description: "");
                               int id = await _dbhelper.insertTask(_newTask);
-                              print("create new task");
                               setState(() {
                                 _taskTitle = value;
                                 _contentVisible = true;
                                 _taskId = id;
+                                print("create new task");
+                                print("$_taskId");
                               });
                             } else {
                               Task _updateTask = Task(
                                   id: widget.task!.id,
                                   title: value,
-                                  description: "");
+                                  description: _taskDesc);
                               await _dbhelper.updateTask(_updateTask);
+                              setState(() {
+                                _taskTitle = value;
+                                _taskId =  widget.task!.id!;
+                                print("updated task");
+                                print("$_taskId");
+                              });
                             }
                             _descriptionFocus.requestFocus();
                           }
@@ -178,7 +189,7 @@ class _TaskpageState extends State<Taskpage> {
                         initialData: [],
                         future: _dbhelper.getTodo(_taskId),
                         builder: (context, AsyncSnapshot snapshot) {
-                          print('taskid of todo ${_taskId}');
+                          // print('taskid of todo $taskId');
                           return ClipRRect(
                             child: ListView.builder(
                                 itemCount: snapshot.data!.length,
@@ -209,7 +220,7 @@ class _TaskpageState extends State<Taskpage> {
                                       isDone: snapshot.data[index].isDone,
                                       taskId: snapshot.data[index].taskId,
                                       todoId: snapshot.data[index].id,
-
+                                      deleteTodoItem: updateDeleteTodoItem,
                                     ),
                                   );
                                 }),

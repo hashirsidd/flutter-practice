@@ -57,24 +57,28 @@ class TodoWidget extends StatelessWidget {
   final int isDone;
   final int taskId;
   final int todoId;
+  Function deleteTodoItem;
 
-  TodoWidget({this.title = "(Unnamed Todo)", this.isDone = 0, this.taskId=0, this.todoId=0});
-
+  TodoWidget(
+      {this.title = "(Unnamed Todo)",
+      this.isDone = 0,
+      this.taskId = 0,
+      this.todoId = 0,
+      required this.deleteTodoItem});
 
   @override
   Widget build(BuildContext context) {
     bool isdone = false;
-    if(isDone==0){
-           isdone = false;
-    }else{
+    if (isDone == 0) {
+      isdone = false;
+    } else {
       isdone = true;
     }
     return Container(
-                   // color: Colors.blue,
+      // color: Colors.blue,
       child: Padding(
-        padding: const EdgeInsets.only(top: 10.0,left: 5.0),
+        padding: const EdgeInsets.only(top: 10.0, left: 5.0),
         child: Row(
-
           children: [
             Container(
               padding: EdgeInsets.all(5.0),
@@ -102,41 +106,39 @@ class TodoWidget extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontWeight: isdone? FontWeight.w500 : FontWeight.bold,
-                color: isdone? Colors.black54 : Colors.black87,
+                fontWeight: isdone ? FontWeight.w500 : FontWeight.bold,
+                color: isdone ? Colors.black54 : Colors.black87,
                 fontSize: 16,
               ),
             ),
             Flexible(fit: FlexFit.tight, child: SizedBox()),
             Container(
-
-              child:  GestureDetector(
-                onTap: () async {
-                  DatabaseHelper _dbhelper = DatabaseHelper();
-                  await _dbhelper.deleteTodo(todoId, taskId);
-                  // await _dbhelper.deleteTodo(widget.task!.id);
-                  print("deleted taskid : $taskId id: $todoId");
-
-                },
-                child: Container(
-                  padding: EdgeInsets.all(7.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.0),
-                    color: Colors.red ,
-                  ),
-                  width: 30.0,
-                  height: 30.0,
-                  child: Image(
-                    height: 20.0,
-                    width: 20.0,
-                    image: AssetImage(
-                      'asset/images/delete_icon.png',
-                    ),
-                  ),
-                  margin: EdgeInsets.only(right: 8.0),
+                child: GestureDetector(
+              onTap: () async {
+                DatabaseHelper _dbhelper = DatabaseHelper();
+                await _dbhelper.deleteTodo(todoId, taskId);
+                // await _dbhelper.deleteTodo(widget.task!.id);
+                print("deleted taskid : $taskId id: $todoId");
+                deleteTodoItem();
+              },
+              child: Container(
+                padding: EdgeInsets.all(7.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7.0),
+                  color: Colors.red,
                 ),
-              )
-            ),
+                width: 30.0,
+                height: 30.0,
+                child: Image(
+                  height: 20.0,
+                  width: 20.0,
+                  image: AssetImage(
+                    'asset/images/delete_icon.png',
+                  ),
+                ),
+                margin: EdgeInsets.only(right: 8.0),
+              ),
+            )),
           ],
         ),
       ),
